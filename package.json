@@ -1,0 +1,16 @@
+{
+  "name": "@apok/admin-components-bulma",
+  "version": "1.0.0",
+  "description": "Bulma components for @apok/admin",
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "author": "Jose Carrero <jose@grupoapok.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@mdi/font": "^3.6.95",
+    "buefy": "^0.7.6",
+    "bulma": "^0.7.5"
+  },
+  "devDependencies": {}
+}

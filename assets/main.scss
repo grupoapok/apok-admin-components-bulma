@@ -1,0 +1,11 @@
+@import "~bulma/sass/utilities/all";
+
+/* Custom styles here */
+
+$mdi-font-path: "~@mdi/font/fonts" !default;
+@import '~@mdi/font/scss/materialdesignicons';
+
+$footer-padding: 1.5rem;
+
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
