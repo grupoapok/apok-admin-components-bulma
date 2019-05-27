@@ -1,7 +1,10 @@
-import Vue from '~vue'
-import Buefy from '~buefy'
+import Vue from 'vue';
+import Buefy from 'buefy';
+import ApokComponentsPlugin from '@apok/admin-components-bootstrap/plugin';
 
 Vue.use(Buefy);
+
+Vue.use(ApokComponentsPlugin);
 
 Vue.directive('text-color', {
     inserted(el, binding) {
