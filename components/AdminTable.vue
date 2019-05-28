@@ -2,9 +2,17 @@
   <div>
     <div class="level">
       <div class="level-left">
-        <router-link :to="createRoute" v-bind="createButtonProps" v-if="canCreate">
-          {{ createButtonText }}
-        </router-link>
+        <div class="buttons is-left">
+          <router-link :to="createRoute" v-bind="createButtonProps" v-if="canCreate">
+            {{ createButtonText }}
+          </router-link>
+          <b-button type="is-info" v-if="filtersFields.length" @click="filtersActive = true">
+            <icon icon="filter"/>
+          </b-button>
+          <b-button v-if="canReload" @click="$emit('refresh')">
+            <icon icon="redo"/>
+          </b-button>
+        </div>
       </div>
       <div class="level-right" style="position: relative">
         <b-pagination
@@ -16,6 +24,20 @@
         <b-loading :active="loading" :is-full-page="false" :can-cancel="false"></b-loading>
       </div>
     </div>
+
+    <transition name="fade">
+    <div class="box" id="list-filters" v-if="filtersActive">
+      <b-button type="is-white" class="close" @click="filtersActive = false">&times;</b-button>
+      <admin-form
+        :form-var="filters"
+        :fields="filtersFields"
+        :show-cancel="false"
+        submit-button-icon="filter"
+        :submit-button-text="null"
+        @submit="$emit('filtersUpdated')"
+      />
+    </div>
+    </transition>
 
     <b-table
       :data="items"
@@ -39,7 +61,7 @@
             <p v-if="emptyIcon">
               <b-icon :icon="emptyIcon" size="is-large"></b-icon>
             </p>
-            <p v-if="emptyMessage">{{ emptyMessage }}</p>
+            <p v-if="emptyMessage">{{ emptyMessage | translate }}</p>
           </div>
         </section>
       </template>
@@ -81,6 +103,11 @@
   export default {
     name: "AdminTable",
     components: { BPagination, BButton, BTableColumn },
+    data() {
+      return {
+        filtersActive: false,
+      }
+    },
     props: {
       idField: {
         type: String,
@@ -92,7 +119,7 @@
       },
       emptyIcon: {
         type: String,
-        default: 'emoticon-sad'
+        default: null
       },
       emptyMessage: {
         type: String,
@@ -114,8 +141,12 @@
         type: Boolean,
         default: true
       },
+      canReload: {
+        type: Boolean,
+        default: true
+      },
       createRoute: {
-        type: Object,
+        type: [String, Object],
         default() {
           return null
         }
@@ -157,6 +188,18 @@
       sortDirection: {
         type: String,
         default: 'asc',
+      },
+      filters: {
+        type: Object,
+        default() {
+          return {};
+        }
+      },
+      filtersFields: {
+        type: Array,
+        default() {
+          return [];
+        }
       }
     },
     computed: {
@@ -172,6 +215,34 @@
     methods: {
       onSort(field, order) {
         this.$emit('sort', { field, order });
+      },
+      evalActionCondition(record, action) {
+        if (!action.condition) {
+          return true
+        }
+
+        const { field, operator, value } = action.condition;
+        const fieldValue = this.getRecordField(record, field);
+
+        switch (operator) {
+          case '=':
+          case '==':
+          case '===':
+            return fieldValue === value;
+          case '>':
+            return fieldValue > value;
+          case '>=':
+            return fieldValue >= value;
+          case '<':
+            return fieldValue < value;
+          case '<=':
+            return fieldValue <= value;
+          case '!=':
+          case '!==':
+            return fieldValue !== value;
+          default:
+            return false;
+        }
       },
       getFieldTitle(field) {
         if (typeof field === 'object') {
@@ -204,6 +275,15 @@
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  #list-filters {
+    position: relative;
+    width: 100%;
+    padding-top: 2.5rem;
+    .close {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
 </style>

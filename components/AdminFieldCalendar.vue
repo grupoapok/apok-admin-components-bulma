@@ -12,12 +12,13 @@
 
 <script>
   import moment from 'moment';
+
   export default {
-    name: "Calendar",
+    name: "AdminFieldCalendar",
     props: {
       readonly: Boolean,
       value: {
-        type: Date,
+        type: [String, Date],
         default() {
           return new Date()
         }
@@ -29,6 +30,16 @@
       parseFormat: {
         type: String,
         default: 'YYYY-MM-DD'
+      }
+    },
+    watch: {
+      value:{
+        handler: function(val) {
+          if (typeof (val) === 'string') {
+            this.value = this.parseDate(val)
+          }
+        },
+        immediate: true
       }
     },
     methods: {

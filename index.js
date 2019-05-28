@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Buefy from 'buefy';
-import ApokComponentsPlugin from '@apok/admin-components-bootstrap/plugin';
+import ApokComponentsPlugin from '@apok/admin-components-bulma/plugin';
 
 Vue.use(Buefy);
 
