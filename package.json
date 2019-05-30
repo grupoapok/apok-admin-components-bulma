@@ -1,6 +1,6 @@
 {
   "name": "@apok/admin-components-bulma",
-  "version": "1.0.1-rc.8",
+  "version": "1.0.1-rc.9",
   "description": "Bulma components for @apok/admin",
   "scripts": {
     "postinstall": "node install.js"
@@ -11,6 +11,8 @@
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "buefy": "^0.7.6",
     "bulma": "^0.7.5",
+    "lodash.camelcase": "^4.3.0",
+    "lodash.upperfirst": "^4.3.1",
     "moment": "^2.24.0"
   },
   "devDependencies": {}

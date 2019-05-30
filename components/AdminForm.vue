@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="doSubmit">
+    <b-loading :is-full-page="false" :active="loading" :can-cancel="false"></b-loading>
     <template v-for="(row,i) in fields">
 
       <template v-if="row.title">
@@ -44,19 +45,26 @@
     <div class="columns">
       <div class="column is-12" v-if="!readonly">
         <div class="buttons" :class="`is-${buttonsAlignment}`">
-          <b-button v-if="(submitButtonText || submitButtonIcon) && showSubmit" :type="submitButtonVariant" native-type="submit">
-            <icon v-if="submitButtonIcon" :icon="submitButtonIcon"></icon>
+          <icon-button
+            :icon="submitButtonIcon"
+            v-if="(submitButtonText || submitButtonIcon) && showSubmit" :type="submitButtonVariant" native-type="submit"
+          >
             {{ submitButtonText | translate }}
-          </b-button>
-          <b-button v-if="(cancelButtonText || cancelButtonIcon) && showCancel" :type="cancelButtonVariant" @click="$emit('cancel')">{{
-            cancelButtonText | translate }}
-          </b-button>
+          </icon-button>
+          <icon-button
+          :icon="cancelButtonIcon"
+          v-if="(cancelButtonText || cancelButtonIcon) && showCancel" :type="cancelButtonVariant" @click="$emit('cancel')">
+            {{ cancelButtonText | translate }}
+          </icon-button>
         </div>
       </div>
       <div class="column is-12" v-else>
-        <b-button v-if="(backButtonText || backButtonIcon) && showBack" :type="backButtonVariant" native-type="button" @click="$emit('cancel')">
+        <icon-button
+          v-if="(backButtonText || backButtonIcon) && showBack"
+          :icon="backButtonIcon"
+          :type="backButtonVariant" native-type="button" @click="$emit('cancel')">
           {{ backButtonText | translate }}
-        </b-button>
+        </icon-button>
       </div>
     </div>
   </form>
@@ -109,5 +117,7 @@
 </script>
 
 <style scoped>
-
+form{
+  position: relative;
+}
 </style>

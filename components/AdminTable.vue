@@ -3,9 +3,13 @@
     <div class="level">
       <div class="level-left">
         <div class="buttons is-left">
-          <router-link :to="createRoute" v-bind="createButtonProps" v-if="canCreate">
-            {{ createButtonText }}
-          </router-link>
+          <slot name="create_button">
+            <router-link
+              :to="createRoute"
+              v-bind="createButtonProps"
+              v-if="canCreate"
+            >{{ createButtonText }}</router-link>
+          </slot>
           <b-button type="is-info" v-if="filtersFields.length" @click="filtersActive = true">
             <icon icon="filter"/>
           </b-button>
@@ -26,34 +30,33 @@
     </div>
 
     <transition name="fade">
-    <div class="box" id="list-filters" v-if="filtersActive">
-      <b-button type="is-white" class="close" @click="filtersActive = false">&times;</b-button>
-      <admin-form
-        :form-var="filters"
-        :fields="filtersFields"
-        :show-cancel="false"
-        submit-button-icon="filter"
-        :submit-button-text="null"
-        @submit="$emit('filtersUpdated')"
-      />
-    </div>
+      <div class="box" id="list-filters" v-if="filtersActive">
+        <b-button type="is-white" class="close" @click="filtersActive = false">&times;</b-button>
+        <admin-form
+          :form-var="filters"
+          :fields="filtersFields"
+          :show-cancel="false"
+          submit-button-icon="filter"
+          :submit-button-text="null"
+          @submit="$emit('filtersUpdated')"
+        />
+      </div>
     </transition>
 
     <b-table
       :data="items"
       :loading="loading"
-
       paginated
       backend-pagination
       :current-page="currentPage"
       :total="totalPages * pageSize"
       :per-page="pageSize"
       @page-change="$emit('pageChanged', $event)"
-
       backend-sorting
       :default-sort-direction="sortDirection"
       :default-sort="[sortField, sortDirection]"
       @sort="onSort"
+      :row-class="(row, index) => row.deleting && 'is-deleting'"
     >
       <template slot="empty">
         <section class="section">
@@ -73,20 +76,23 @@
           :sortable="field.sortable"
           :key="`column_${i}`"
         >
-          <slot :item="props.row" :name="`${field.key || field}`">
-            {{ getRecordField(props.row, field) }}
-          </slot>
+          <slot
+            :item="props.row"
+            :name="`${field.key || field}`"
+          >{{ getRecordField(props.row, field) }}</slot>
         </b-table-column>
 
-        <b-table-column label="">
+        <b-table-column label>
           <div class="buttons is-right">
-            <b-button
+            <icon-button
               v-for="(a,j) in actions"
               :key="`action_${j}`"
               v-bind="a.props"
-              @click="$emit(`${a.action}`, props.row[idField])">
-              <span v-if="a.text">{{ a.text }}</span>
-            </b-button>
+              :disabled="props.row.deleting"
+              @click="$emit(`${a.action}`, props.row[idField])"
+            >
+              <template v-if="a.text">{{ a.text | translate }}</template>
+            </icon-button>
           </div>
         </b-table-column>
       </template>
@@ -95,195 +101,207 @@
 </template>
 
 <script>
-  import BButton from "buefy/src/components/button/Button";
-  import BPagination from "buefy/src/components/pagination/Pagination";
-  import camelCase from "lodash.camelcase";
-  import BTableColumn from "buefy/src/components/table/TableColumn";
+import camelCase from "lodash.camelcase";
+import upperFirst from "lodash.upperfirst";
 
-  export default {
-    name: "AdminTable",
-    components: { BPagination, BButton, BTableColumn },
-    data() {
-      return {
-        filtersActive: false,
+export default {
+  name: "AdminTable",
+  data() {
+    return {
+      filtersActive: false
+    };
+  },
+  props: {
+    idField: {
+      type: String,
+      default: "id"
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
+    emptyIcon: {
+      type: String,
+      default: null
+    },
+    emptyMessage: {
+      type: String,
+      default: "Nothing Here."
+    },
+    totalPages: {
+      type: Number,
+      default: 1
+    },
+    currentPage: {
+      type: Number,
+      default: 1
+    },
+    pageSize: {
+      type: Number,
+      default: 1
+    },
+    canCreate: {
+      type: Boolean,
+      default: true
+    },
+    canReload: {
+      type: Boolean,
+      default: true
+    },
+    createRoute: {
+      type: [String, Object],
+      default() {
+        return null;
       }
     },
-    props: {
-      idField: {
-        type: String,
-        default: "id"
-      },
-      loading: {
-        type: Boolean,
-        default: false
-      },
-      emptyIcon: {
-        type: String,
-        default: null
-      },
-      emptyMessage: {
-        type: String,
-        default: 'Nothing Here.'
-      },
-      totalPages: {
-        type: Number,
-        default: 1,
-      },
-      currentPage: {
-        type: Number,
-        default: 1,
-      },
-      pageSize: {
-        type: Number,
-        default: 1,
-      },
-      canCreate: {
-        type: Boolean,
-        default: true
-      },
-      canReload: {
-        type: Boolean,
-        default: true
-      },
-      createRoute: {
-        type: [String, Object],
-        default() {
-          return null
-        }
-      },
-      createButtonText: {
-        type: String,
-        default: 'New'
-      },
-      createButtonProps: {
-        type: Object,
-        default() {
-          return {
-            class: 'button is-primary'
-          }
-        }
-      },
-      items: {
-        type: Array,
-        default() {
-          return []
-        }
-      },
-      fields: {
-        type: Array,
-        default() {
-          return []
-        }
-      },
-      actions: {
-        type: Array,
-        default() {
-          return []
-        }
-      },
-      sortField: {
-        type: String,
-        default: null,
-      },
-      sortDirection: {
-        type: String,
-        default: 'asc',
-      },
-      filters: {
-        type: Object,
-        default() {
-          return {};
-        }
-      },
-      filtersFields: {
-        type: Array,
-        default() {
-          return [];
-        }
+    createButtonText: {
+      type: String,
+      default: "New"
+    },
+    createButtonProps: {
+      type: Object,
+      default() {
+        return {
+          class: "button is-primary"
+        };
       }
     },
-    computed: {
-      tableFields() {
-        if (this.fields.length === 0) {
-          if (this.items[0]) {
-            return Object.keys(this.items[0]);
-          }
-        }
-        return this.fields;
+    items: {
+      type: Array,
+      default() {
+        return [];
       }
     },
-    methods: {
-      onSort(field, order) {
-        this.$emit('sort', { field, order });
-      },
-      evalActionCondition(record, action) {
-        if (!action.condition) {
-          return true
+    fields: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
+    actions: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
+    sortField: {
+      type: String,
+      default: null
+    },
+    sortDirection: {
+      type: String,
+      default: "asc"
+    },
+    filters: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    filtersFields: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
+  },
+  computed: {
+    tableFields() {
+      if (this.fields.length === 0) {
+        if (this.items[0]) {
+          return Object.keys(this.items[0]);
         }
+      }
+      return this.fields;
+    }
+  },
+  methods: {
+    onSort(field, order) {
+      this.$emit("sort", { field, order });
+    },
+    evalActionCondition(record, action) {
+      if (!action.condition) {
+        return true;
+      }
 
-        const { field, operator, value } = action.condition;
-        const fieldValue = this.getRecordField(record, field);
+      const { field, operator, value } = action.condition;
+      const fieldValue = this.getRecordField(record, field);
 
-        switch (operator) {
-          case '=':
-          case '==':
-          case '===':
-            return fieldValue === value;
-          case '>':
-            return fieldValue > value;
-          case '>=':
-            return fieldValue >= value;
-          case '<':
-            return fieldValue < value;
-          case '<=':
-            return fieldValue <= value;
-          case '!=':
-          case '!==':
-            return fieldValue !== value;
-          default:
-            return false;
+      switch (operator) {
+        case "=":
+        case "==":
+        case "===":
+          return fieldValue === value;
+        case ">":
+          return fieldValue > value;
+        case ">=":
+          return fieldValue >= value;
+        case "<":
+          return fieldValue < value;
+        case "<=":
+          return fieldValue <= value;
+        case "!=":
+        case "!==":
+          return fieldValue !== value;
+        default:
+          return false;
+      }
+    },
+    getFieldTitle(field) {
+      let title = field;
+      if (typeof field === "object") {
+        title = field.label || field.key;
+      }
+      return upperFirst(camelCase(this.$t(title)));
+    },
+    getRecordField(record, field) {
+      let fieldKey = field;
+      let fieldValue = null;
+
+      if (typeof field === "object") {
+        fieldKey = field.key;
+      }
+
+      const keys = fieldKey.split(".");
+      fieldValue = record[keys[0]];
+
+      for (let i = 1; i < keys.length; i++) {
+        if (fieldValue && fieldValue.hasOwnProperty(keys[i])) {
+          fieldValue = fieldValue[keys[i]];
+        } else {
+          break;
         }
-      },
-      getFieldTitle(field) {
-        if (typeof field === 'object') {
-          return this.$t(field.label || camelCase(field.key));
-        }
-        return camelCase(this.$t(field));
-      },
-      getRecordField(record, field) {
-        let fieldKey = field;
-        let fieldValue = null;
+      }
 
-        if (typeof field === 'object') {
-          fieldKey = field.key;
-        }
-
-        const keys = fieldKey.split(".");
-        fieldValue = record[keys[0]];
-
-        for (let i = 1; i < keys.length; i++) {
-          if (fieldValue && fieldValue.hasOwnProperty(keys[i])) {
-            fieldValue = fieldValue[keys[i]];
-          } else {
-            break;
-          }
-        }
-
-        return fieldValue;
-      },
+      return fieldValue;
     }
   }
+};
 </script>
 
 <style scoped lang="scss">
-  #list-filters {
-    position: relative;
-    width: 100%;
-    padding-top: 2.5rem;
-    .close {
-      position: absolute;
-      top: 0;
-      right: 0;
+@import "~bulma";
+
+#list-filters {
+  position: relative;
+  width: 100%;
+  padding-top: 2.5rem;
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+tr {
+  &.is-deleting {
+    td {
+      background: rgba($danger, 0.5);
+      color: $text-light !important;
+      &:not(:last-child) {
+        text-decoration: line-through;
+      }
     }
   }
+}
 </style>
