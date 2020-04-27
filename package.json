@@ -1,0 +1,20 @@
+{
+  "name": "@josercl/components-bulma",
+  "version": "0.0.1",
+  "description": "Bulma components for @josercl/vue-admin",
+  "scripts": {},
+  "author": "Jose Carrero <josercl@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/vue-admin/components-bulma"
+  },
+  "dependencies": {
+    "@fortawesome/vue-fontawesome": "^0.1.6",
+    "lodash.camelcase": "^4.3.0",
+    "lodash.upperfirst": "^4.3.1",
+    "buefy": "^0.8.15",
+    "bulma": "^0.8.2"
+  },
+  "devDependencies": {}
+}

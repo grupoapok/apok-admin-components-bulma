@@ -1,0 +1,41 @@
+@import "~bulma/sass/utilities/all";
+
+@import "./variables";
+
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+
+.is-fullwidth-mobile {
+  @include mobile {
+    display: flex;
+    width: 100%;
+    margin-right: 0 !important;
+  }
+}
+
+.menu-toggle {
+  cursor: pointer;
+}
+
+.is-paddingless-horizontal {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.icon-button {
+  & > span {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.has-text-right {
+  input[type=text] {
+    text-align: right;
+  }
+}
