@@ -8,8 +8,8 @@
       v-bind="navbarProps"
       :expanded="sidebarExpanded"
       :user="user"
-      @sidebarToggled="$emit('sidebarToggled')"
-      @onLogout="$emit('logout')"
+      @toggle-sidebar="$emit('toggle-sidebar')"
+      @logout="$emit('logout')"
     />
     <main class="columns is-marginless">
       <div class="column is-narrow is-hidden-mobile menu">

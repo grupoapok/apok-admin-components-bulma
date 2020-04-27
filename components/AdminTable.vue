@@ -22,6 +22,7 @@
           :current-page="currentPage"
           :total-pages="totalPages"
           @pageChanged="$emit('pageChanged', $event)"
+          @pageSizeChanged="$emit('pageSizeChanged', $event)"
         />
         <!--<div style="display: inline-flex;align-items: center;margin-right: 1rem;" v-if="canChangePageSize">
           Mostrar

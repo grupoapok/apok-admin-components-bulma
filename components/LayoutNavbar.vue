@@ -39,7 +39,7 @@
             <icon-renderer icon="user"/>
             Profile
           </b-navbar-item>
-          <b-navbar-item @click.prevent="() => { $emit('logout'); showUserMenu = false}">
+          <b-navbar-item @click.prevent="$emit('logout')">
             <icon-renderer icon="sign-out-alt"/>
             Logout
           </b-navbar-item>
