@@ -1,32 +1,32 @@
 <template>
-  <div class="time-picker-container" @keyup.esc="showDialog = false">
+  <div @keyup.esc="showDialog = false" class="time-picker-container">
     <b-input
-      type="time"
-      :value="time"
-      expanded
-      class="is-hidden-desktop"
       :class="{'readonly': readonly}"
       :readonly="readonly"
+      :value="time"
       @input="$emit('input',$event)"
+      class="is-hidden-desktop"
+      expanded
+      type="time"
     />
     <b-input
-      expanded
-      readonly
-      class="is-hidden-touch"
       :class="{'readonly': readonly}"
       :value="time"
-      v-bind="$attrs"
       @click.native="openDialog"
+      class="is-hidden-touch"
+      expanded
+      readonly
+      v-bind="$attrs"
     />
     <div class="time-picker-dialog" v-if="showDialog">
-      <b-button class="close" type="is-text" @click="showDialog = false">&times;</b-button>
+      <b-button @click="showDialog = false" class="close" type="is-text">&times;</b-button>
       <div class="columns is-vcentered is-multiline" v-if="showHours">
         <template v-if="showHours">
           <div class="column is-one-third">
             {{ hoursLabel | translate }}
           </div>
           <div class="column is-two-thirds">
-            <b-numberinput v-model="model.hours" :step="hoursInterval" :max="use24Hours ? 23 : 11" :min="0"/>
+            <b-numberinput :max="use24Hours ? 23 : 11" :min="0" :step="hoursInterval" v-model="model.hours"/>
           </div>
         </template>
         <template v-if="showMinutes">
@@ -34,7 +34,7 @@
             {{ minutesLabel | translate }}
           </div>
           <div class="column is-two-thirds">
-            <b-numberinput v-model="model.minutes" :step="minutesInterval" :max="59" :min="0"/>
+            <b-numberinput :max="59" :min="0" :step="minutesInterval" v-model="model.minutes"/>
           </div>
         </template>
         <template v-if="showSeconds">
@@ -42,12 +42,11 @@
             {{ secondsLabel | translate }}
           </div>
           <div class="column is-two-thirds">
-            <b-numberinput v-model="model.seconds" :step="secondsInterval" :max="59" :min="0"/>
+            <b-numberinput :max="59" :min="0" :step="secondsInterval" v-model="model.seconds"/>
           </div>
         </template>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -55,7 +54,7 @@
   import moment from 'moment';
 
   export default {
-    name: "AdminFieldTimePicker",
+    name: "InputFormTimePicker",
     inheritAttrs: false,
     data() {
       return {
@@ -197,19 +196,19 @@
     }
   }
 </script>
-
-<style scoped lang="scss">
-  @import "~bulma";
-
+<style lang="scss" scoped>
   .time-picker-container {
     flex-grow: 1;
     position: relative;
+
     input[type="text"], input[type="time"] {
       background: $input-background-color !important;
+
       &.readonly {
         background: $input-disabled-background-color !important;
       }
     }
+
     .close {
       position: absolute;
       top: 0;
@@ -217,6 +216,7 @@
       outline: none !important;
       text-decoration: none !important;
     }
+
     .time-picker-dialog {
       max-width: 250px;
       padding: 2.25rem .75rem .75rem .75rem;

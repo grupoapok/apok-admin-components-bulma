@@ -1,20 +1,19 @@
 <template>
   <b-datepicker
-    v-if="!readonly"
-    :value="value"
-    v-bind="$attrs"
-    :date-formatter="formatDate"
-    :date-parser="parseDate"
-    @input="$emit('input',$event)"
-  ></b-datepicker>
-  <b-input v-else :value="formatDate(value)" readonly></b-input>
+          v-if="!readonly"
+          :value="value"
+          :date-formatter="formatDate"
+          :date-parser="parseDate"
+          @input="$emit('input',$event)"
+  />
+  <b-input v-else :value="formatDate(value)" readonly/>
 </template>
 
 <script>
   import moment from 'moment';
 
   export default {
-    name: "AdminFieldCalendar",
+    name: "InputFormCalendar",
     props: {
       readonly: Boolean,
       value: {
@@ -33,8 +32,8 @@
       }
     },
     watch: {
-      value:{
-        handler: function(val) {
+      value: {
+        handler: function (val) {
           if (typeof (val) === 'string') {
             this.value = this.parseDate(val)
           }
@@ -43,16 +42,12 @@
       }
     },
     methods: {
-      formatDate(date){
+      formatDate(date) {
         return moment(date).format(this.format)
       },
-      parseDate(date){
+      parseDate(date) {
         return moment(date, this.parseFormat).toDate()
       }
     }
   }
 </script>
-
-<style scoped>
-
-</style>
