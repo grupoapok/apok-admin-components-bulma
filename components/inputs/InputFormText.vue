@@ -1,9 +1,10 @@
 <template>
   <b-input
-    :loading="loading"
     :readonly="readonly"
+    :disabled="loading"
     :type="type"
     :value="value"
+    v-bind="[$attrs.props, $attrs]"
     @input="emit"
     expanded
   />
