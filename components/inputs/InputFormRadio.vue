@@ -1,17 +1,19 @@
 <template>
   <div>
-    <b-radio
-      :disabled="readonly"
-      :key="`radio_${i}`"
-      :native-value="o.value"
-      :value="value"
-      @input="emit"
-      v-for="(o,i) in processedOptions"
-    >
-      {{ o.label | translate }}
-    </b-radio>
+    <div v-for="(o,i) in processedOptions" class="field">
+      <b-radio
+        :disabled="readonly"
+        :key="`radio_${i}`"
+        :native-value="o.value"
+        :value="value"
+        @input="emit"
+      >
+        {{ o.label | translate }}
+      </b-radio>
+    </div>
   </div>
-</template>
+</template
+>
 <script>
   import InputMixin from "./InputMixin";
 
@@ -19,7 +21,17 @@
     name: 'InputFormRadio',
     mixins: [InputMixin],
     props: {
-      options: Array
+      options: {
+        type: Array,
+        default() {
+          return [
+            {
+              label: 'Default',
+              value: false
+            }
+          ]
+        }
+      }
     },
     computed: {
       processedOptions() {
