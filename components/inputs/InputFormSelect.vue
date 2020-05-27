@@ -1,15 +1,15 @@
 <template>
   <b-select
+    placeholder="No option selected..."
     :disabled="readonly"
     :loading="loading"
     :value="value"
     @input="emit"
     expanded
   >
-    <template v-for="o in $attrs.props.options">
-      <option :value="o.value" v-if="typeof(o) === 'object'">{{ o.label || o.text }}</option>
-      <option :value="o" v-else>{{ o }}</option>
-    </template>
+    <option v-for="(option, i) in options" :key="i" :value="option.value">
+      {{ option.text }}
+    </option>
   </b-select>
 </template>
 <script>
@@ -19,7 +19,12 @@
     name: 'InputFormSelect',
     mixins: [InputMixin],
     props: {
-      options: Array,
+      options: {
+        type: Array,
+        default() {
+          return [{value: 'default value', text: 'Option 1'}]
+        }
+      },
     }
   }
 </script>
