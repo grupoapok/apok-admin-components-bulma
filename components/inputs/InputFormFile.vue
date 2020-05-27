@@ -1,17 +1,20 @@
 <template>
   <div class="upload-container">
-    <div class="file has-name is-fullwidth">
+
+    <div class="file is-link">
       <label class="file-label">
         <input @input="selectFile" class="file-input" type="file">
         <span class="file-cta">
             <span class="file-icon">
               <icon-renderer :icon="fileIcon"/>
             </span>
-            <span class="file-label">
-              {{ buttonText | translate }}
+            <span v-if="!!value && value.name" class="file-label">
+              {{ value.name | translate }}
+            </span>
+            <span v-else class="file-label">
+              {{ buttonText | translate}}
             </span>
           </span>
-        <span class="file-name" v-if="!!value && value.name">{{ value.name }}</span>
       </label>
     </div>
     <!--<b-upload :value="value" expanded @input="selectFile">
@@ -25,9 +28,8 @@
         </span>
       </a>
     </b-upload>-->
-
-    <figure class="file-image image is-128x128">
-      <img :src="thumbnail" v-if="!!thumbnail"/>
+    <figure v-if="!!thumbnail" class="file-image image is-128x128">
+      <img :src="thumbnail" />
     </figure>
   </div>
 </template>
