@@ -1,12 +1,15 @@
 <template>
   <div>
-  <b-checkbox
-    :disabled="readonly"
-    :value="value"
-    @input="emit"
-  >
-    {{ label | translate }}
-  </b-checkbox>
+    <div class="field" v-for="(option, i) in options" :key="i">
+      <b-checkbox
+        :type="color"
+        :name="option.label"
+        :disabled="readonly"
+        :value="option.value"
+        @input="emit">
+        {{ option.label | translate }}
+      </b-checkbox>
+    </div>
   </div>
 </template>
 <script>
@@ -15,6 +18,22 @@
   export default {
     name: 'InputFormCheck',
     mixins: [InputMixin],
-    props: {}
+    props: {
+      color: {
+        type: String,
+        default: 'is-info',
+      },
+      options: {
+        type: [Array, String],
+        default() {
+          return [
+            {
+              label:'Default',
+              value: false,
+            }
+          ]
+        }
+      }
+    }
   }
 </script>
