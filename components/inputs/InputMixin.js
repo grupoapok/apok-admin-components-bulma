@@ -33,6 +33,10 @@ export default {
     error: {
       type: String,
       default: null,
+    },
+    placeholder: {
+      type: String,
+      default: null
     }
   },
   computed: {
