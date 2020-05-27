@@ -1,4 +1,18 @@
 <template>
+
+
+    <!--<b-datepicker
+      icon-pack="fal"
+      icon-next="arrow-right"
+      icon-prev="arrow-left"
+      @input="$emit('input', $event)"
+      :date-formatter="formatDate"
+      :date-parser="parseDate"
+      v-if="!readonly"
+      :value="value"
+      placeholder="Select a date...">
+    </b-datepicker>-->
+
   <b-datepicker
           v-if="!readonly"
           :value="value"
@@ -11,9 +25,11 @@
 
 <script>
   import moment from 'moment';
+  import InputMixin from "./InputMixin";
 
   export default {
     name: "InputFormCalendar",
+    mixins: [InputMixin],
     props: {
       readonly: Boolean,
       value: {
@@ -47,7 +63,7 @@
       },
       parseDate(date) {
         return moment(date, this.parseFormat).toDate()
-      }
+      },
     }
   }
 </script>
