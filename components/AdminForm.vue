@@ -11,6 +11,7 @@
           <div :class="['column', field.size && `is-${field.size}`]" :key="`field_${i}_${k}_${j}`"
                v-for="(field, j) in fields">
             <admin-form-field
+              :loading="loading"
               :error="errors[field.model]"
               :label="field.label"
               :readonly="loading || readonly || field.loading"
@@ -29,6 +30,7 @@
           <div :class="['column', field.size && `is-${field.size}`]" :key="`field_${i}_${j}`"
                v-for="(field, j) in row">
             <admin-form-field
+              :loading="loading"
               :error="errors[field.model]"
               :label="field.label"
               :readonly="loading || readonly || field.loading"
@@ -40,13 +42,14 @@
         </div>
       </template>
     </template>
+    <hr/>
 
     <slot></slot>
-
     <div class="columns">
       <div class="column is-12" v-if="!readonly">
         <div :class="`is-${buttonsAlignment}`" class="buttons">
           <button-renderer
+            :loading="loading"
             :type="submitButtonVariant"
             class="is-fullwidth-mobile"
             native-type="submit"
