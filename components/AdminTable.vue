@@ -310,8 +310,7 @@
   };
 </script>
 
-<style scoped lang="scss">
-
+<style lang="scss" scoped>
   #list-filters {
     position: relative;
     width: 100%;
