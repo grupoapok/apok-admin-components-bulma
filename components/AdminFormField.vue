@@ -13,7 +13,8 @@
       </p>
 
       <component
-        :is="`form-input-${type}-renderer`" v-bind="[$attrs.props, $attrs, $props]"
+        :is="`form-input-${type}-renderer`"
+        v-bind="[$attrs.props, $attrs, $props]"
         :value="value"
         @input="emit"
       />
@@ -51,7 +52,7 @@
     },
   }
 </script>
-<!--
+
 <style lang="scss" scoped>
   .file {
     width: 100%;
@@ -73,4 +74,4 @@
       border-radius: $input-radius;
     }
   }
-</style>-->
+</style>
