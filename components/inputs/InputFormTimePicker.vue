@@ -19,32 +19,62 @@
       v-bind="$attrs"
     />
     <div class="time-picker-dialog" v-if="showDialog">
-      <b-button @click="showDialog = false" class="close" type="is-text">&times;</b-button>
-      <div class="columns is-vcentered is-multiline" v-if="showHours">
-        <template v-if="showHours">
-          <div class="column is-one-third">
-            {{ hoursLabel | translate }}
-          </div>
-          <div class="column is-two-thirds">
-            <b-numberinput :max="use24Hours ? 23 : 11" :min="0" :step="hoursInterval" v-model="model.hours"/>
-          </div>
-        </template>
-        <template v-if="showMinutes">
-          <div class="column is-one-third">
-            {{ minutesLabel | translate }}
-          </div>
-          <div class="column is-two-thirds">
-            <b-numberinput :max="59" :min="0" :step="minutesInterval" v-model="model.minutes"/>
-          </div>
-        </template>
-        <template v-if="showSeconds">
-          <div class="column is-one-third">
-            {{ secondsLabel | translate }}
-          </div>
-          <div class="column is-two-thirds">
-            <b-numberinput :max="59" :min="0" :step="secondsInterval" v-model="model.seconds"/>
-          </div>
-        </template>
+      <b-button @click="showDialog = false" class="close" size="is-small" type="is-text">
+        <icon-renderer icon="times"/>
+      </b-button>
+
+      <!-- Hours input-->
+      <div class="contol columns is-vcentered is-multiline" v-if="showHours">
+        <span class="column">{{ hoursLabel | translate }}</span>
+        <b-field class="column">
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="decreaseHours">
+              <icon-renderer icon="minus"/>
+            </b-button>
+          </p>
+          <input v-model="model.hours" type="number" :min="0" :max="use24Hours ? 23 : 11" :step="hoursInterval" expanded/>
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="increaseHours">
+              <icon-renderer icon="plus"/>
+            </b-button>
+          </p>
+        </b-field>
+      </div>
+
+      <!-- Minutes input-->
+      <div class="contol columns is-vcentered is-multiline" v-if="showMinutes">
+        <span class="column">{{ minutesLabel | translate }}</span>
+        <b-field class="column">
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="decreaseMinutes">
+              <icon-renderer icon="minus"/>
+            </b-button>
+          </p>
+          <input v-model="model.minutes" type="number" :min="0" :max="59" :step="minutesInterval" expanded/>
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="increaseMinutes">
+              <icon-renderer icon="plus"/>
+            </b-button>
+          </p>
+        </b-field>
+      </div>
+
+      <!-- Seconds input-->
+      <div class="contol columns is-vcentered is-multiline" v-if="showSeconds">
+        <span class="column">{{ secondsLabel | translate }}</span>
+        <b-field class="column">
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="decreaseSeconds">
+              <icon-renderer icon="minus"/>
+            </b-button>
+          </p>
+          <input v-model="model.seconds" type="number" :min="0" :max="59" :step="minutesInterval" expanded/>
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="increaseSeconds">
+              <icon-renderer icon="plus"/>
+            </b-button>
+          </p>
+        </b-field>
       </div>
     </div>
   </div>
@@ -89,7 +119,7 @@
       },
       buttonsVariant: {
         type: String,
-        default: null
+        default: 'is-primary'
       },
       hoursInterval: {
         type: Number,
@@ -218,7 +248,6 @@
     }
 
     .time-picker-dialog {
-      max-width: 250px;
       padding: 2.25rem .75rem .75rem .75rem;
       background: $white;
       border-radius: $input-radius;
