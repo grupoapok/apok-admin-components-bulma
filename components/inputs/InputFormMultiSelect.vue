@@ -1,5 +1,5 @@
 <template>
-  <div :class="['multi-select-container', readonly && 'readonly']">
+  <!--<div :class="['multi-select-container', readonly && 'readonly']">
     <div class="multi-select-input input">
       <span
               class="selected-option"
@@ -51,8 +51,42 @@
       </div>
     </div>
 
+  </div>-->
+  <div class="columns">
+
+    <b-dropdown :scrollable="options.length >= 4" aria-role="list">
+
+      <button class="button is-link"  slot="trigger">
+         <icon-renderer icon="chevron-down"/>
+      </button>
+
+      <b-dropdown-item
+        v-for="(option, i) in {...options}"
+        :key="`option_${i}`"
+        aria-role="listitem"
+        :value="option.value"
+        @click="select(option)">
+        {{ option.name }}
+      </b-dropdown-item>
+    </b-dropdown>
+    <div class="control input">
+        <span
+          v-for="(selected, i) in Array.from(selectedOptions)"
+          :key="`selected_${i}`"
+          class="tag is-link">
+          {{selected.name}}
+          <button class="is-small delete" @click="deleteOption(selected)"/>
+        </span>
+      <span
+        class="has-text-grey-lighter"
+        v-if="selectedOptions.size === 0">
+          {{ placeholder | translate }}
+        </span>
+    </div>
+
   </div>
-</template>
+
+  </template>
 
 <script>
 
@@ -71,7 +105,11 @@
       options: {
         type: Array,
         default() {
-          return [];
+          let options = [];
+          for (let i=1; i <= 6; i++){
+            options.push({id: i, name: `Option ${i}`, value: `Opt ${i} selected` })
+          }
+          return options;
         }
       },
       state: {
@@ -84,7 +122,7 @@
       },
       placeholder: {
         type: String,
-        default: 'Select Options',
+        default: 'Select options...',
       },
     },
     computed: {
@@ -133,7 +171,7 @@
       doEmit() {
         const values = Array.from(this.selectedOptions).map(v => v.value);
         this.$emit('input', values);
-        this.hideOptions()
+        //this.hideOptions()
       },
       select(value) {
         const newSet = new Set();
@@ -145,11 +183,12 @@
       deleteOption(selectedOption) {
         const newSet = new Set();
         this.selectedOptions.forEach((so) => {
-          if (so.value !== selectedOption.value) {
+          if (so.id !== selectedOption.id) {
             newSet.add(so);
           }
         });
         this.selectedOptions = newSet;
+
         this.doEmit();
       },
       showOptionsList() {
@@ -224,9 +263,9 @@
       height: 100%;
       white-space: nowrap;
       margin-right: .5rem;
-      border: 1px solid $primary;
-      background: $primary;
-      color: $primary-invert;
+      border: 1px solid $link;
+      background: $link;
+      color: white;
       font-size: .8rem;
       padding: 0 .5rem;
       border-radius: .25rem;
@@ -237,7 +276,7 @@
       }
     }
 
-    .multi-select-options {
+    /*.multi-select-options {
       width: 100%;
       border: 1px solid $input-border-color;
       border-bottom-left-radius: 4px;
@@ -267,6 +306,6 @@
           color: $primary-invert;
         }
       }
-    }
+    }*/
   }
 </style>
