@@ -1,11 +1,3 @@
-@import "~bulma/sass/utilities/all";
-
-@import "./variables";
-
-// Import Bulma and Buefy styles
-@import "~bulma";
-@import "~buefy/src/scss/buefy";
-
 .is-fullwidth-mobile {
   @include mobile {
     display: flex;
