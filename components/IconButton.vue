@@ -6,13 +6,14 @@
     <slot name="icon">
       <icon-renderer
         :class="['button-icon-left', realIcon.materialIcon && 'md-18']"
+        :icon="icon"
         v-bind="realIcon"
         v-if="icon && !right"
       />
     </slot>
     <slot/>
     <slot name="right-icon">
-      <icon
+      <icon-renderer
         :class="['button-icon-right', realIcon.materialIcon && 'md-18']"
         :icon="icon"
         v-bind="realIcon"
