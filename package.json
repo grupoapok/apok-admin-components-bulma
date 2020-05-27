@@ -8,12 +8,12 @@
   "author": "Jose Carrero <jose@grupoapok.com>",
   "license": "MIT",
   "dependencies": {
+    "@fortawesome/vue-fontawesome": "^0.1.6",
+    "buefy": "^0.8.20",
+    "bulma": "^0.8.2",
     "lodash.camelcase": "^4.3.0",
     "lodash.upperfirst": "^4.3.1",
-    "moment": "^2.24.0",
-    "@fortawesome/vue-fontawesome": "^0.1.6",
-    "buefy": "^0.8.15",
-    "bulma": "^0.8.2"
+    "moment": "^2.24.0"
   },
   "devDependencies": {}
 }
