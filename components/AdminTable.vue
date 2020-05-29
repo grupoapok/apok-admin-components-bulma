@@ -4,7 +4,7 @@
       <div class="level-left">
         <div class="buttons is-left">
           <slot name="create_button">
-            <button-renderer v-bind="createButtonProps" @click="$router.push(createRoute)" v-if="canCreate">
+            <button-renderer v-bind="createButtonProps" v-if="canCreate">
               {{ createButtonText | translate }}
             </button-renderer>
           </slot>
@@ -16,7 +16,7 @@
           </button-renderer>
         </div>
       </div>
-      <div class="level-right" style="position: relative">
+      <!--<div class="level-right" style="position: relative">
         <pagination-renderer
           :page-size="pageSize"
           :current-page="currentPage"
@@ -24,7 +24,7 @@
           @pageChanged="$emit('pageChanged', $event)"
           @pageSizeChanged="$emit('pageSizeChanged', $event)"
         />
-        <!--<div style="display: inline-flex;align-items: center;margin-right: 1rem;" v-if="canChangePageSize">
+        <div style="display: inline-flex;align-items: center;margin-right: 1rem;" v-if="canChangePageSize">
           Mostrar
           <b-select :value="pageSize" @input="(e) => $emit('pageSizeChanged', e)">
             <option
@@ -43,8 +43,8 @@
                 :current="currentPage"
                 @change="$emit('pageChanged', $event)"
         />
-        <b-loading :active="loading" :is-full-page="false" :can-cancel="false"/>-->
-      </div>
+        <b-loading :active="loading" :is-full-page="false" :can-cancel="false"/>
+      </div>-->
     </div>
 
     <!--<transition name="fade">
@@ -61,7 +61,7 @@
       </div>
     </transition>-->
 
-    <b-table
+    <!--<b-table
             :data="items"
             :loading="loading"
             :paginated="totalPages > 1"
@@ -87,6 +87,7 @@
           </div>
         </section>
       </template>
+
       <template v-slot:default="props">
         <b-table-column
                 v-for="(field, i) in tableFields"
@@ -116,7 +117,45 @@
           </div>
         </b-table-column>
       </template>
-    </b-table>
+    </b-table>-->
+    <b-field>
+      <pagination-renderer
+        :draggable="true"
+        :page-size="pageSize"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        @pageChanged="$emit('pageChanged', $event)"
+      />
+    </b-field>
+    <b-field class="columns is-centered">
+      <b-table
+        :per-page="pageSize"
+        :data="items"
+        :hoverable="true"
+        :loading="loading"
+        :columns="columns">
+        <template class="column" slot="empty">
+          <section class="section">
+            <div class="content has-text-grey has-text-centered">
+              <p>
+                <icon-renderer size="6x" icon="frown"/>
+              </p>
+              <h1>{{ emptyMessage }}</h1>
+            </div>
+          </section>
+
+          <template slot-scope="props">
+
+
+          </template>
+
+
+        </template>
+
+      </b-table>
+    </b-field>
+
+
   </div>
 </template>
 
@@ -134,6 +173,29 @@
       };
     },
     props: {
+      items: {
+        type: Array,
+        default() {
+          const itemsList = [];
+          for(let i = 1; i <= 50; i++){
+            itemsList.push(
+              {id: `${i}`, first_name: `F_Name_${i}`, last_name: `L_Name_${i}`, age: i}
+            )
+          }
+          return itemsList
+        }
+      },
+      columns:{
+        type: Array,
+        default(){
+          return [
+            {field: 'id', label: 'ID', centered: true, },
+            {field: 'first_name', label: 'First name', centered: true,},
+            {field: 'last_name', label: 'Last name', centered: true,},
+            {field: 'age', label: 'Age', centered: true,},
+          ]
+        }
+      },
       idField: {
         type: String,
         default: "id"
@@ -152,7 +214,7 @@
       },
       emptyMessage: {
         type: String,
-        default: "Nothing Here."
+        default: "Nothing to show..."
       },
       totalPages: {
         type: Number,
@@ -195,12 +257,6 @@
             type: 'is-success',
             icon: 'plus',
           };
-        }
-      },
-      items: {
-        type: Array,
-        default() {
-          return [];
         }
       },
       fields: {
