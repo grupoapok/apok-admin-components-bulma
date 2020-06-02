@@ -1,8 +1,8 @@
 <template>
-  <div class="level-right" style="position: relative">
-    <div style="display: inline-flex;align-items: center;margin-right: 1rem;">
+  <div class="column" style="position: relative">
+    <div style="display: inline-flex; align-items: center; margin-right: 1rem;">
       Mostrar
-      <b-select class="mx-2" :value="pageSize" @input="(e) => $emit('pageSizeChanged', e)">
+      <b-select size="is-small" class="mx-2" :value="pageSize" @input="(e) => $emit('pageSizeChanged', e)">
         <option
           :key="option"
           :value="option"
@@ -24,10 +24,13 @@
 <script>
   export default {
     name: 'Pagination',
+    data() {
+      return {
+        pageSize: 5,
+      }
+    },
     props: {
-      pageSize: {
-        default: 20,
-      },
+
       pageSizes: {
         type: Array,
         default() {

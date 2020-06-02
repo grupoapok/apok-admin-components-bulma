@@ -1,50 +1,27 @@
 <template>
   <div>
-    <div class="level">
-      <div class="level-left">
-        <div class="buttons is-left">
-          <slot name="create_button">
-            <button-renderer v-bind="createButtonProps" v-if="canCreate">
-              {{ createButtonText | translate }}
-            </button-renderer>
-          </slot>
-          <button-renderer type="is-info" v-if="filtersFields.length" @click="filtersActive = true">
-            <icon-renderer icon="filter"/>
+    <div class="columns">
+      <b-field class="buttons">
+        <slot name="create_button">
+          <button-renderer class="" v-bind="createButtonProps" v-if="canCreate">
+            {{ createButtonText | translate }}
           </button-renderer>
-          <button-renderer v-if="canReload" @click="$emit('refresh')">
-            <icon-renderer icon="redo"/>
-          </button-renderer>
-        </div>
-      </div>
-      <!--<div class="level-right" style="position: relative">
-        <pagination-renderer
-          :page-size="pageSize"
-          :current-page="currentPage"
-          :total-pages="totalPages"
-          @pageChanged="$emit('pageChanged', $event)"
-          @pageSizeChanged="$emit('pageSizeChanged', $event)"
-        />
-        <div style="display: inline-flex;align-items: center;margin-right: 1rem;" v-if="canChangePageSize">
-          Mostrar
-          <b-select :value="pageSize" @input="(e) => $emit('pageSizeChanged', e)">
-            <option
-                    v-for="option in [1,5,10,15,20,25,50,100]"
-                    :value="option"
-                    :key="option">
-              {{ option }}
-            </option>
-          </b-select>
-          por página
-        </div>
-        <b-pagination
-                v-if="totalPages > 1"
-                :total="totalPages * pageSize"
-                :per-page="pageSize"
-                :current="currentPage"
-                @change="$emit('pageChanged', $event)"
-        />
-        <b-loading :active="loading" :is-full-page="false" :can-cancel="false"/>
-      </div>-->
+        </slot>
+        <button-renderer type="is-info" v-if="filtersFields.length" @click="filtersActive = true">
+          <icon-renderer icon="filter"/>
+        </button-renderer>
+        <button-renderer v-if="canReload" @click="$emit('refresh')">
+          <icon-renderer icon="redo"/>
+        </button-renderer>
+      </b-field>
+    </div>
+    <div v-if="allowPagination" class="column">
+      <pagination-renderer
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        @pageChanged="$emit('pageChanged', $event)"
+        @pageSizeChanged="(e) => this.pageSize = e"
+      />
     </div>
 
     <!--<transition name="fade">
@@ -61,11 +38,14 @@
       </div>
     </transition>-->
 
-    <!--<b-table
+    <b-table
+            class="column"
             :data="items"
+            :columns="columns"
             :loading="loading"
-            :paginated="totalPages > 1"
-            backend-pagination
+            :paginated="allowPagination"
+            pagination-size="is-small"
+            pagination-position="top"
             :hoverable="hover"
             :current-page="currentPage"
             :total="totalPages * pageSize"
@@ -81,14 +61,14 @@
         <section class="section">
           <div class="content has-text-grey has-text-centered">
             <p v-if="emptyIcon">
-              <icon-renderer :icon="emptyIcon" size="is-large"/>
+              <icon-renderer :icon="emptyIcon.length ? emptyIcon : 'frown'" size="is-large"/>
             </p>
             <p v-if="emptyMessage">{{ emptyMessage | translate }}</p>
           </div>
         </section>
       </template>
 
-      <template v-slot:default="props">
+      <!--<template v-slot:default="props">
         <b-table-column
                 v-for="(field, i) in tableFields"
                 :label="getFieldTitle(field)"
@@ -103,7 +83,7 @@
           </slot>
         </b-table-column>
 
-        <b-table-column label>
+        <b-table-column>
           <div class="buttons is-right">
             <button-renderer
                     v-for="(a,j) in actions"
@@ -116,45 +96,8 @@
             </button-renderer>
           </div>
         </b-table-column>
-      </template>
-    </b-table>-->
-    <b-field>
-      <pagination-renderer
-        :draggable="true"
-        :page-size="pageSize"
-        :current-page="currentPage"
-        :total-pages="totalPages"
-        @pageChanged="$emit('pageChanged', $event)"
-      />
-    </b-field>
-    <b-field class="columns is-centered">
-      <b-table
-        :per-page="pageSize"
-        :data="items"
-        :hoverable="true"
-        :loading="loading"
-        :columns="columns">
-        <template class="column" slot="empty">
-          <section class="section">
-            <div class="content has-text-grey has-text-centered">
-              <p>
-                <icon-renderer size="6x" icon="frown"/>
-              </p>
-              <h1>{{ emptyMessage }}</h1>
-            </div>
-          </section>
-
-          <template slot-scope="props">
-
-
-          </template>
-
-
-        </template>
-
-      </b-table>
-    </b-field>
-
+      </template>-->
+    </b-table>
 
   </div>
 </template>
@@ -169,7 +112,8 @@
     components: { IconButton },
     data() {
       return {
-        filtersActive: false
+        filtersActive: false,
+        pageSize: 5,
       };
     },
     props: {
@@ -177,11 +121,11 @@
         type: Array,
         default() {
           const itemsList = [];
-          for(let i = 1; i <= 50; i++){
+          /*for(let i = 1; i <= 50; i++){
             itemsList.push(
               {id: `${i}`, first_name: `F_Name_${i}`, last_name: `L_Name_${i}`, age: i}
             )
-          }
+          }*/
           return itemsList
         }
       },
@@ -216,15 +160,15 @@
         type: String,
         default: "Nothing to show..."
       },
+      allowPagination:{
+        type: Boolean,
+        default: false,
+      },
       totalPages: {
         type: Number,
         default: 1
       },
       currentPage: {
-        type: Number,
-        default: 1
-      },
-      pageSize: {
         type: Number,
         default: 1
       },
