@@ -1,77 +1,87 @@
 <template>
   <form @submit.prevent="doSubmit">
-    <b-loading :is-full-page="false" :active="loading" :can-cancel="false"></b-loading>
+    <b-loading :active="loading" :can-cancel="false" :is-full-page="false"/>
     <template v-for="(row,i) in fields">
 
       <template v-if="row.title">
-        <h2 class="title is-2" :key="`title_${i}`">{{ row.title | translate }}</h2>
+        <h2 :key="`title_${i}`" class="title is-2">{{ row.title | translate }}</h2>
         <hr :key="`hr_${i}`">
 
-        <div class="columns" :key="`form_row_${i}_${k}`" v-for="(fields,k) in row.fields">
-          <div :class="['column', field.size && `is-${field.size}`]" v-for="(field, j) in fields"
-               :key="`field_${i}_${k}_${j}`">
+        <div :key="`form_row_${i}_${k}`" class="columns" v-for="(fields,k) in row.fields">
+          <div :class="['column', field.size && `is-${field.size}`]" :key="`field_${i}_${k}_${j}`"
+               v-for="(field, j) in fields">
             <admin-form-field
-              v-model="formVar[field.model]"
-              :readonly="loading || readonly || field.loading"
+              :loading="loading"
               :error="errors[field.model]"
               :label="field.label"
+              :readonly="loading || readonly || field.loading"
               :type="field.type || 'text'"
-              v-bind="field"
               @input="$emit('fieldChanged')"
+              v-bind="field"
+              v-model="formVar[field.model]"
             />
           </div>
         </div>
       </template>
 
       <template v-else>
-        <div class="columns" :key="`form_row_${i}`">
-          <div :class="['column', field.size && `is-${field.size}`]" v-for="(field, j) in row"
-               :key="`field_${i}_${j}`">
+
+        <div :key="`form_row_${i}`" class="columns">
+          <div :class="['column', field.size && `is-${field.size}`]" :key="`field_${i}_${j}`"
+               v-for="(field, j) in row">
             <admin-form-field
-              v-model="formVar[field.model]"
-              :readonly="loading || readonly || field.loading"
+              :loading="loading"
               :error="errors[field.model]"
               :label="field.label"
+              :readonly="loading || readonly || field.loading"
               :type="field.type"
+              @input="$emit('fieldChanged')"
               v-bind="field"
-              @input="$emit('fieldChanged')"/>
+              v-model="formVar[field.model]"/>
           </div>
         </div>
       </template>
     </template>
+    <hr/>
 
     <slot></slot>
-
     <div class="columns">
       <div class="column is-12" v-if="!readonly">
-        <div class="buttons" :class="`is-${buttonsAlignment}`">
-          <icon-button
-            :icon="submitButtonIcon"
-            v-if="(submitButtonText || submitButtonIcon) && showSubmit" :type="submitButtonVariant" native-type="submit"
+        <div :class="`is-${buttonsAlignment}`" class="buttons">
+          <button-renderer
+            :loading="loading"
+            :type="submitButtonVariant"
+            class="is-fullwidth-mobile"
+            native-type="submit"
+            v-bind="submitButtonIcon"
+            v-if="(submitButtonText || submitButtonIcon) && showSubmit"
           >
             {{ submitButtonText | translate }}
-          </icon-button>
-          <icon-button
-          :icon="cancelButtonIcon"
-          v-if="(cancelButtonText || cancelButtonIcon) && showCancel" :type="cancelButtonVariant" @click="$emit('cancel')">
+          </button-renderer>
+          <button-renderer
+            :type="cancelButtonVariant"
+            @click="$emit('cancel')"
+            class="is-fullwidth-mobile" v-bind="cancelButtonIcon"
+            v-if="(cancelButtonText || cancelButtonIcon) && showCancel">
             {{ cancelButtonText | translate }}
-          </icon-button>
+          </button-renderer>
         </div>
       </div>
       <div class="column is-12" v-else>
-        <icon-button
-          v-if="(backButtonText || backButtonIcon) && showBack"
+        <button-renderer
           :icon="backButtonIcon"
-          :type="backButtonVariant" native-type="button" @click="$emit('cancel')">
+          :type="backButtonVariant"
+          @click="$emit('cancel')"
+          class="is-fullwidth-mobile" native-type="button"
+          v-if="(backButtonText || backButtonIcon) && showBack">
           {{ backButtonText | translate }}
-        </icon-button>
+        </button-renderer>
       </div>
     </div>
   </form>
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex';
   import AdminFormField from "./AdminFormField";
 
   export default {
@@ -80,6 +90,12 @@
     inheritAttrs: false,
     props: {
       formVar: Object,
+      errors: {
+        type: Object,
+        default() {
+          return {};
+        },
+      },
       readonly: Boolean,
       fields: {
         type: Array,
@@ -92,24 +108,40 @@
       buttonsAlignment: { type: String, default: 'left' },
       submitButtonText: { type: String, default: 'actions.save' },
       submitButtonVariant: { type: String, default: 'is-primary' },
-      submitButtonIcon: { type: String, default: 'save' },
+      submitButtonIcon: {
+        type: Object,
+        default() {
+          return {
+            icon: 'check',
+          }
+        }
+      },
       cancelButtonText: { type: String, default: 'actions.cancel' },
       cancelButtonVariant: { type: String, default: null },
-      cancelButtonIcon: { type: String, default: 'angle-left' },
+      cancelButtonIcon: {
+        type: Object,
+        default() {
+          return {
+            icon: 'angle-left',
+          }
+        }
+      },
       backButtonText: { type: String, default: 'actions.goBack' },
       backButtonVariant: { type: String, default: 'is-info' },
-      backButtonIcon: { type: String, default: 'angle-left' },
+      backButtonIcon: {
+        type: Object,
+        default() {
+          return {
+            icon: 'angle-left',
+          }
+        }
+      },
       showCancel: { type: Boolean, default: true },
       showSubmit: { type: Boolean, default: true },
       showBack: { type: Boolean, default: true },
     },
-    computed: {
-      ...mapState('messages', { 'errors': 'fields' }),
-    },
     methods: {
-      ...mapActions('messages', ['resetFields']),
       doSubmit() {
-        this.resetFields();
         this.$emit('submit');
       },
     }
@@ -117,7 +149,7 @@
 </script>
 
 <style scoped>
-form{
-  position: relative;
-}
+  form {
+    position: relative;
+  }
 </style>
