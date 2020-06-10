@@ -1,53 +1,82 @@
 <template>
-  <div class="time-picker-container" @keyup.esc="showDialog = false">
+  <div @keyup.esc="showDialog = false" class="time-picker-container">
     <b-input
-      type="time"
-      :value="time"
-      expanded
-      class="is-hidden-desktop"
       :class="{'readonly': readonly}"
       :readonly="readonly"
+      :value="time"
       @input="$emit('input',$event)"
+      class="is-hidden-desktop"
+      expanded
+      type="time"
     />
     <b-input
-      expanded
-      readonly
-      class="is-hidden-touch"
       :class="{'readonly': readonly}"
       :value="time"
-      v-bind="$attrs"
       @click.native="openDialog"
+      class="is-hidden-touch"
+      expanded
+      readonly
+      v-bind="$attrs"
     />
     <div class="time-picker-dialog" v-if="showDialog">
-      <b-button class="close" type="is-text" @click="showDialog = false">&times;</b-button>
-      <div class="columns is-vcentered is-multiline" v-if="showHours">
-        <template v-if="showHours">
-          <div class="column is-one-third">
-            {{ hoursLabel | translate }}
-          </div>
-          <div class="column is-two-thirds">
-            <b-numberinput v-model="model.hours" :step="hoursInterval" :max="use24Hours ? 23 : 11" :min="0"/>
-          </div>
-        </template>
-        <template v-if="showMinutes">
-          <div class="column is-one-third">
-            {{ minutesLabel | translate }}
-          </div>
-          <div class="column is-two-thirds">
-            <b-numberinput v-model="model.minutes" :step="minutesInterval" :max="59" :min="0"/>
-          </div>
-        </template>
-        <template v-if="showSeconds">
-          <div class="column is-one-third">
-            {{ secondsLabel | translate }}
-          </div>
-          <div class="column is-two-thirds">
-            <b-numberinput v-model="model.seconds" :step="secondsInterval" :max="59" :min="0"/>
-          </div>
-        </template>
+      <b-button @click="showDialog = false" class="close" size="is-small" type="is-text">
+        <icon-renderer icon="times"/>
+      </b-button>
+
+      <!-- Hours input-->
+      <div class="contol columns is-vcentered is-multiline" v-if="showHours">
+        <span class="column">{{ hoursLabel | translate }}</span>
+        <b-field class="column">
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="decreaseHours">
+              <icon-renderer icon="minus"/>
+            </b-button>
+          </p>
+          <input v-model="model.hours" type="number" :min="0" :max="use24Hours ? 23 : 11" :step="hoursInterval" expanded/>
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="increaseHours">
+              <icon-renderer icon="plus"/>
+            </b-button>
+          </p>
+        </b-field>
+      </div>
+
+      <!-- Minutes input-->
+      <div class="contol columns is-vcentered is-multiline" v-if="showMinutes">
+        <span class="column">{{ minutesLabel | translate }}</span>
+        <b-field class="column">
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="decreaseMinutes">
+              <icon-renderer icon="minus"/>
+            </b-button>
+          </p>
+          <input v-model="model.minutes" type="number" :min="0" :max="59" :step="minutesInterval" expanded/>
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="increaseMinutes">
+              <icon-renderer icon="plus"/>
+            </b-button>
+          </p>
+        </b-field>
+      </div>
+
+      <!-- Seconds input-->
+      <div class="contol columns is-vcentered is-multiline" v-if="showSeconds">
+        <span class="column">{{ secondsLabel | translate }}</span>
+        <b-field class="column">
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="decreaseSeconds">
+              <icon-renderer icon="minus"/>
+            </b-button>
+          </p>
+          <input v-model="model.seconds" type="number" :min="0" :max="59" :step="minutesInterval" expanded/>
+          <p class="control">
+            <b-button rounded :type="buttonsVariant" size="is-small" @click="increaseSeconds">
+              <icon-renderer icon="plus"/>
+            </b-button>
+          </p>
+        </b-field>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -55,7 +84,7 @@
   import moment from 'moment';
 
   export default {
-    name: "AdminFieldTimePicker",
+    name: "InputFormTimePicker",
     inheritAttrs: false,
     data() {
       return {
@@ -90,7 +119,7 @@
       },
       buttonsVariant: {
         type: String,
-        default: null
+        default: 'is-primary'
       },
       hoursInterval: {
         type: Number,
@@ -197,19 +226,19 @@
     }
   }
 </script>
-
-<style scoped lang="scss">
-  @import "~bulma";
-
+<style lang="scss" scoped>
   .time-picker-container {
     flex-grow: 1;
     position: relative;
+
     input[type="text"], input[type="time"] {
       background: $input-background-color !important;
+
       &.readonly {
         background: $input-disabled-background-color !important;
       }
     }
+
     .close {
       position: absolute;
       top: 0;
@@ -217,8 +246,8 @@
       outline: none !important;
       text-decoration: none !important;
     }
+
     .time-picker-dialog {
-      max-width: 250px;
       padding: 2.25rem .75rem .75rem .75rem;
       background: $white;
       border-radius: $input-radius;
