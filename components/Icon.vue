@@ -1,8 +1,13 @@
 <template>
-
-  <font-awesome-icon class="admin-icon" :icon="icon" :spin="spin" v-bind="$attrs"
-                     v-if="!materialIcon && !mdi"/>
-  <i :class="['admin-icon mdi', `mdi-${icon}`, `mdi-${$attrs.size || '24px'}`, spin && 'mdi-spin']" v-else-if="mdi"/>
+  <font-awesome-icon
+    class="admin-icon"
+    :icon="icon"
+    :spin="spin"
+    v-bind="$attrs"
+    v-if="!materialIcon && !mdi"
+  />
+  <i :class="['admin-icon mdi', `mdi-${icon}`, `mdi-${$attrs.size || '24px'}`, spin && 'mdi-spin']"
+     v-else-if="mdi"/>
   <i :class="`admin-icon material-icons${outlined ? '-outlined' : ''}`" v-else>{{ icon }}</i>
 </template>
 

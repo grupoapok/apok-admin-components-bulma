@@ -1,28 +1,31 @@
 <template>
   <div>
     <div class="columns">
-      <b-field class="buttons">
-        <slot name="create_button">
-          <button-renderer class="" v-bind="createButtonProps" v-if="canCreate">
-            {{ createButtonText | translate }}
+      <div class="columns">
+        <b-field class="buttons is-small">
+          <slot name="create_button">
+            <button-renderer size="is-small" v-bind="createButtonProps" v-if="canCreate">
+              {{ createButtonText | translate }}
+            </button-renderer>
+          </slot>
+          <button-renderer size="is-small" type="is-info" v-if="filtersFields.length" @click="filtersActive = true">
+            <icon-renderer icon="filter"/>
           </button-renderer>
-        </slot>
-        <button-renderer type="is-info" v-if="filtersFields.length" @click="filtersActive = true">
-          <icon-renderer icon="filter"/>
-        </button-renderer>
-        <button-renderer v-if="canReload" @click="$emit('refresh')">
-          <icon-renderer icon="redo"/>
-        </button-renderer>
-      </b-field>
+          <button-renderer size="is-small" v-if="canReload" @click="$emit('refresh')">
+            <icon-renderer icon="redo"/>
+          </button-renderer>
+        </b-field>
+      </div>
+      <div v-if="allowPagination" class="column">
+        <pagination-renderer
+          :current-page="currentPage"
+          :total-pages="items.length / pageSize"
+          @pageChanged="$emit('pageChanged', $event)"
+          @pageSizeChanged="(e) => this.pageSize = e"
+        />
+      </div>
     </div>
-    <div v-if="allowPagination" class="column">
-      <pagination-renderer
-        :current-page="currentPage"
-        :total-pages="totalPages"
-        @pageChanged="$emit('pageChanged', $event)"
-        @pageSizeChanged="(e) => this.pageSize = e"
-      />
-    </div>
+
 
     <!--<transition name="fade">
       <div class="box" id="list-filters" v-if="filtersActive">
@@ -60,9 +63,7 @@
       <template slot="empty">
         <section class="section">
           <div class="content has-text-grey has-text-centered">
-            <p v-if="emptyIcon">
-              <icon-renderer :icon="emptyIcon.length ? emptyIcon : 'frown'" size="is-large"/>
-            </p>
+            <icon-renderer :icon="emptyIcon ? emptyIcon : 'frown'" size="4x"/>
             <p v-if="emptyMessage">{{ emptyMessage | translate }}</p>
           </div>
         </section>
@@ -119,15 +120,7 @@
     props: {
       items: {
         type: Array,
-        default() {
-          const itemsList = [];
-          /*for(let i = 1; i <= 50; i++){
-            itemsList.push(
-              {id: `${i}`, first_name: `F_Name_${i}`, last_name: `L_Name_${i}`, age: i}
-            )
-          }*/
-          return itemsList
-        }
+        default: [],
       },
       columns:{
         type: Array,
