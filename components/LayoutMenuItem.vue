@@ -13,7 +13,7 @@
             </span>
     </a>
     <ul :class="[!expanded && 'is-hidden']" v-if="children.length">
-      <admin-menu-entry :key="`child_${i}`" v-bind="child" v-for="(child, i) in children"/>
+      <li :key="`child_${i}`" v-bind="child" v-for="(child, i) in children"/>
     </ul>
   </li>
 </template>
