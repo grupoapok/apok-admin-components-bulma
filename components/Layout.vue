@@ -6,19 +6,17 @@
     />
     <layout-navbar-renderer
       v-bind="navbarProps"
-      :expanded="sidebarExpanded"
       :user="user"
       @toggle-sidebar="$emit('toggle-sidebar')"
       @logout="$emit('logout')"
     />
-    <main class="columns is-marginless">
-      <div class="column is-narrow is-hidden-mobile menu">
-        <menu-renderer :items="menu" :expanded="sidebarExpanded"/>
-      </div>
+    <main class="columns is-gapless">
+      <menu-renderer :items="menu" :expanded="sidebarExpanded"/>
       <div class="column">
         <slot/>
       </div>
     </main>
+
     <layout-footer-renderer v-bind="footerProps" class="footer">
       <slot name="footer">This is the Footer</slot>
     </layout-footer-renderer>
