@@ -19,7 +19,7 @@ import LayoutMenuItem from "./components/LayoutMenuItem";
 import LayoutNavbar from "./components/LayoutNavbar";
 import Messages from "./components/Messages";
 import Pagination from "./components/Pagination";
-
+import Dashboard from "./components/Dashboard";
 
 Vue.use(Buefy);
 
@@ -52,10 +52,12 @@ const renderers = {
   'FormInputCalendarRenderer': InputFormCalendar,
   'FormInputTimeRenderer': InputFormTimePicker,
   'FormInputMultiSelectRenderer': InputFormMultiSelect,
+
+  'DashboardRenderer': Dashboard,
 };
 
 const BulmaAdminComponents = {
-  install: function (vue, options) {
+  install: (vue, options) => {
     const componentsToRegister = {
       ...renderers,
       ...options
