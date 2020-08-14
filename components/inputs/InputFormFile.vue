@@ -34,6 +34,7 @@
   </div>
 </template>
 <script>
+  /* eslint-disable */
   import InputMixin from "./InputMixin";
 
   export default {
@@ -52,7 +53,9 @@
     },
     computed: {
       thumbnail() {
-        if (this.type !== 'file') return null;
+        if (this.type !== 'file') {
+          return null;
+        }
 
         if (!!this.value) {
           if (typeof this.value === 'string') {
