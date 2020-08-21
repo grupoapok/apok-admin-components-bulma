@@ -19,12 +19,6 @@
         @input="emit"
       />
 
-      <!--
-
-      <template v-if="type === 'file'">
-
-      </template>-->
-
       <p class="control" v-for="(addon, i) in append" :key="i">
         <span class="button is-static">
           <icon-renderer v-bind="addon" v-if="addon.icon"/>

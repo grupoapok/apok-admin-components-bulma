@@ -105,11 +105,7 @@
       options: {
         type: Array,
         default() {
-          let options = [];
-          for (let i=1; i <= 6; i++){
-            options.push({id: i, name: `Option ${i}`, value: `Opt ${i} selected` })
-          }
-          return options;
+          return []
         }
       },
       state: {

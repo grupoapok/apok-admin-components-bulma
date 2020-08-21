@@ -32,7 +32,6 @@
       }
     },
     props: {
-
       pageSizes: {
         type: Array,
         default() {
@@ -40,9 +39,11 @@
         }
       },
       currentPage: {
+        type: Number,
         default: 1,
       },
       totalPages: {
+        type: Number,
         default: 1,
       }
     }

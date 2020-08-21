@@ -4,7 +4,7 @@
       :class="{'readonly': readonly}"
       :readonly="readonly"
       :value="time"
-      @input="$emit('input',$event)"
+      @input="$emit('input', $event)"
       class="is-hidden-desktop"
       expanded
       type="time"
@@ -170,13 +170,13 @@
         immediate: true
       },
       ['model.hours']() {
-        this.$emit('input', this.time)
+        this.$emit('selected-time', this.time)
       },
       ['model.minutes']() {
-        this.$emit('input', this.time)
+        this.$emit('selected-time', this.time)
       },
       ['model.seconds']() {
-        this.$emit('input', this.time)
+        this.$emit('selected-time', this.time)
       },
     },
     methods: {

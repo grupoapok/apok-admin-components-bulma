@@ -72,11 +72,9 @@
       },
       title: {
         type: String,
-        default: 'Admin'
       },
       shortTitle: {
         type: String,
-        default: 'A'
       },
       locales: {
         type: Array,

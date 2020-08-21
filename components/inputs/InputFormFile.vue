@@ -49,7 +49,6 @@
         type: [Object, String],
         default: 'upload'
       },
-      fileButtonText: String,
     },
     computed: {
       thumbnail() {

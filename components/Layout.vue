@@ -8,7 +8,7 @@
       v-bind="navbarProps"
       :user="user"
       @toggle-sidebar="$emit('toggle-sidebar')"
-      @logout="confirmLogout()"
+      @logout="confirmLogout"
     />
     <main class="columns is-gapless">
       <menu-renderer :items="menu" :expanded="sidebarExpanded"/>

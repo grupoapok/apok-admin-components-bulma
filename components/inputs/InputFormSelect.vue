@@ -22,7 +22,7 @@
       options: {
         type: Array,
         default() {
-          return [{value: 'default value', text: 'Option 1'}]
+          return [];
         }
       },
     }
