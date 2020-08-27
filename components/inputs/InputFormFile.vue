@@ -34,6 +34,7 @@
   </div>
 </template>
 <script>
+  /* eslint-disable */
   import InputMixin from "./InputMixin";
 
   export default {
@@ -48,11 +49,12 @@
         type: [Object, String],
         default: 'upload'
       },
-      fileButtonText: String,
     },
     computed: {
       thumbnail() {
-        if (this.type !== 'file') return null;
+        if (this.type !== 'file') {
+          return null;
+        }
 
         if (!!this.value) {
           if (typeof this.value === 'string') {

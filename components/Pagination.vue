@@ -2,7 +2,7 @@
   <div class="column">
     <div style="display: inline-flex; align-items: center; margin-right: 1rem;">
       Mostrar
-      <b-select size="is-small" class="mx-2" :value="pageSize" @input="(e) => $emit('pageSizeChanged', e)">
+      <b-select class="mx-2" :value="pageSize" @input="(e) => $emit('pageSizeChanged', e)">
         <option
           :key="option"
           :value="option"
@@ -12,16 +12,15 @@
       </b-select>
       por página
     </div>
-    <div style="display: inline-flex; align-items: center;">
+    <!--<div style="display: inline-flex; align-items: center;">
       <b-pagination
-        size="is-small"
         :current="currentPage"
         :per-page="pageSize"
         :total="totalPages * pageSize"
         @change="$emit('pageChanged', $event)"
         v-if="totalPages > 1"
       />
-    </div>
+    </div>-->
   </div>
 </template>
 <script>
@@ -33,7 +32,6 @@
       }
     },
     props: {
-
       pageSizes: {
         type: Array,
         default() {
@@ -41,9 +39,11 @@
         }
       },
       currentPage: {
+        type: Number,
         default: 1,
       },
       totalPages: {
+        type: Number,
         default: 1,
       }
     }

@@ -4,30 +4,36 @@
     :icon="icon"
     :spin="spin"
     v-bind="$attrs"
-    v-if="!materialIcon && !mdi"
+    v-if="!material && !mdi"
   />
-  <i :class="['admin-icon mdi', `mdi-${icon}`, `mdi-${$attrs.size || '24px'}`, spin && 'mdi-spin']"
-     v-else-if="mdi"/>
-  <i :class="`admin-icon material-icons${outlined ? '-outlined' : ''}`" v-else>{{ icon }}</i>
+  <i :class="['admin-icon mdi', `mdi-${icon}`, `mdi-${$attrs.size || '24px'}`, spin && 'mdi-spin']" v-else-if="mdi"/>
+  <i :class="`admin-icon material-icons${outlined ? '-outlined' : ''}`" v-else-if="material">{{ icon }}</i>
+  <unicon :name="icon" :icon-style="iconStyle" v-bind="$attrs" v-else-if="unicons"/>
+
 </template>
 
 <script>
-  import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
   export default {
     name: "Icon",
     inheritAttrs: false,
-    components: { FontAwesomeIcon },
     props: {
+      unicons: {
+        type: Boolean,
+        default: false,
+      },
+      iconStyle: {
+        type: String,
+        default: 'line',
+      },
+      material: {
+        type: Boolean,
+        default: false,
+      },
       icon: {
         type: [String, Array],
         default: null
       },
       spin: {
-        type: Boolean,
-        default: false
-      },
-      materialIcon: {
         type: Boolean,
         default: false
       },

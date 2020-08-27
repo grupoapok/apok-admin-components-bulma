@@ -1,17 +1,17 @@
 <template>
   <div>
     <div class="columns">
-      <div class="columns">
-        <b-field class="buttons is-small">
+      <div class="column is-narrow">
+        <b-field class="buttons is-small column">
           <slot name="create_button">
-            <button-renderer size="is-small" v-bind="createButtonProps" v-if="canCreate">
+            <button-renderer v-bind="createButtonProps" v-if="canCreate">
               {{ createButtonText | translate }}
             </button-renderer>
           </slot>
-          <button-renderer size="is-small" type="is-info" v-if="filtersFields.length" @click="filtersActive = true">
+          <button-renderer type="is-info" v-if="filtersFields.length" @click="filtersActive = true">
             <icon-renderer icon="filter"/>
           </button-renderer>
-          <button-renderer size="is-small" v-if="canReload" @click="$emit('refresh')">
+          <button-renderer v-if="canReload" @click="$emit('refresh')">
             <icon-renderer icon="redo"/>
           </button-renderer>
         </b-field>
@@ -25,6 +25,7 @@
         />
       </div>
     </div>
+
 
 
     <!--<transition name="fade">
@@ -41,76 +42,75 @@
       </div>
     </transition>-->
 
-    <b-table
-            class="column"
-            :data="items"
-            :columns="columns"
-            :loading="loading"
-            :paginated="allowPagination"
-            pagination-size="is-small"
-            pagination-position="top"
-            :hoverable="hover"
-            :current-page="currentPage"
-            :total="totalPages * pageSize"
-            :per-page="pageSize"
-            @page-change="$emit('pageChanged', $event)"
-            backend-sorting
-            :default-sort-direction="sortDirection"
-            :default-sort="[sortField, sortDirection]"
-            @sort="onSort"
-            :row-class="(row, index) => row.deleting && 'is-deleting'"
-    >
-      <template slot="empty">
-        <section class="section">
-          <div class="content has-text-grey has-text-centered">
-            <icon-renderer :icon="emptyIcon ? emptyIcon : 'frown'" size="4x"/>
-            <p v-if="emptyMessage">{{ emptyMessage | translate }}</p>
-          </div>
-        </section>
-      </template>
-
-      <!--<template v-slot:default="props">
-        <b-table-column
-                v-for="(field, i) in tableFields"
-                :label="getFieldTitle(field)"
-                :field="field.key || field"
-                :sortable="field.sortable"
-                :key="`column_${i}`"
+    <div class="columns">
+      <div class="column">
+        <b-table
+          :data="items"
+          :loading="loading"
+          :paginated="allowPagination"
+          pagination-position="top"
+          :hoverable="hover"
+          :current-page="currentPage"
+          :total="totalPages * pageSize"
+          :per-page="pageSize"
+          @page-change="$emit('pageChanged', $event)"
+          backend-sorting
+          :default-sort-direction="sortDirection"
+          :default-sort="[sortField, sortDirection]"
+          @sort="onSort"
+          :row-class="(row, index) => row.deleting && 'is-deleting'"
         >
-          <slot
-                  :item="props.row"
-                  :name="`${field.key || field}`"
-          >{{ getRecordField(props.row, field) }}
-          </slot>
-        </b-table-column>
+          <template slot="empty">
+            <section class="section">
+              <div class="content has-text-grey has-text-centered">
+                <icon-renderer :icon="emptyIcon ? emptyIcon : 'frown'" size="4x"/>
+                <p v-if="emptyMessage">{{ emptyMessage | translate }}</p>
+              </div>
+            </section>
+          </template>
 
-        <b-table-column>
-          <div class="buttons is-right">
-            <button-renderer
-                    v-for="(a,j) in actions"
-                    :key="`action_${j}`"
-                    v-bind="a.props"
-                    :disabled="props.row.deleting"
-                    @click="$emit(`${a.action}`, props.row[idField])"
+          <template v-slot:default="props">
+            <b-table-column
+              v-for="(field, i) in tableFields"
+              :label="getFieldTitle(field)"
+              :field="field.key || field"
+              :sortable="field.sortable"
+              :key="`column_${i}`"
             >
-              <template v-if="a.text">{{ a.text | translate }}</template>
-            </button-renderer>
-          </div>
-        </b-table-column>
-      </template>-->
-    </b-table>
+              <slot
+                :item="props.row"
+                :name="`${field.key || field}`"
+              >{{ getRecordField(props.row, field) }}
+              </slot>
+            </b-table-column>
 
+            <b-table-column>
+              <div class="buttons is-right">
+                <button-renderer
+                  v-for="(a,j) in actions"
+                  :key="`action_${j}`"
+                  v-bind="a.props"
+                  :disabled="props.row.deleting"
+                  @click="$emit(`${a.action}`, props.row[idField])"
+                >
+                  <template v-if="a.text">{{ a.text | translate }}</template>
+                </button-renderer>
+              </div>
+            </b-table-column>
+          </template>
+        </b-table>
+      </div>
+
+    </div>
   </div>
 </template>
 
 <script>
 
   import upperFirst from "lodash.upperfirst";
-  import IconButton from "./IconButton";
 
   export default {
     name: "AdminTable",
-    components: { IconButton },
     data() {
       return {
         filtersActive: false,
@@ -120,19 +120,11 @@
     props: {
       items: {
         type: Array,
-        default: [],
-      },
-      columns:{
-        type: Array,
         default(){
-          return [
-            {field: 'id', label: 'ID', centered: true, },
-            {field: 'first_name', label: 'First name', centered: true,},
-            {field: 'last_name', label: 'Last name', centered: true,},
-            {field: 'age', label: 'Age', centered: true,},
-          ]
-        }
+          return []
+        },
       },
+
       idField: {
         type: String,
         default: "id"

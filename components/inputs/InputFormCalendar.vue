@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import moment from 'moment';
+  import { format, parse } from 'date-fns';
   import InputMixin from "./InputMixin";
 
   export default {
@@ -40,11 +40,11 @@
       },
       format: {
         type: String,
-        default: 'DD/MM/YYYY'
+        default: 'dd/MM/yyyy'
       },
       parseFormat: {
         type: String,
-        default: 'YYYY-MM-DD'
+        default: 'yyyy-MM-dd'
       }
     },
     watch: {
@@ -59,10 +59,10 @@
     },
     methods: {
       formatDate(date) {
-        return moment(date).format(this.format)
+        return format(date, this.format)
       },
       parseDate(date) {
-        return moment(date, this.parseFormat).toDate()
+        return parse(date, this.parseFormat, new Date())
       },
     }
   }

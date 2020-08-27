@@ -1,12 +1,15 @@
 <template>
+  <!-- eslint-disable -->
   <aside class="column is-narrow menu">
     <template v-for="(child,i) in items">
       <template v-if="!!child.children">
         <p :key="`title_${i}`" class="menu-label" v-if="expanded && !!child.title">{{ child.title }}</p>
         <ul class="menu-list">
-          <menu-item-renderer :key="`entry_${i}_${j}`" :mini="!expanded"
-                              v-bind="entry"
-                              v-for="(entry,j) in child.children"/>
+          <menu-item-renderer
+            :mini="!expanded"
+            v-bind="entry"
+            v-for="(entry, j) in child.children"
+            :key="`entry_${i}_${j}`" />
         </ul>
       </template>
       <ul class="menu-list" v-else>
