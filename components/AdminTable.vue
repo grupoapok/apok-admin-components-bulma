@@ -42,62 +42,66 @@
       </div>
     </transition>-->
 
-    <b-table
-            :data="items"
-            :loading="loading"
-            :paginated="allowPagination"
-            pagination-position="top"
-            :hoverable="hover"
-            :current-page="currentPage"
-            :total="totalPages * pageSize"
-            :per-page="pageSize"
-            @page-change="$emit('pageChanged', $event)"
-            backend-sorting
-            :default-sort-direction="sortDirection"
-            :default-sort="[sortField, sortDirection]"
-            @sort="onSort"
-            :row-class="(row, index) => row.deleting && 'is-deleting'"
-    >
-      <template slot="empty">
-        <section class="section">
-          <div class="content has-text-grey has-text-centered">
-            <icon-renderer :icon="emptyIcon ? emptyIcon : 'frown'" size="4x"/>
-            <p v-if="emptyMessage">{{ emptyMessage | translate }}</p>
-          </div>
-        </section>
-      </template>
-
-      <template v-slot:default="props">
-        <b-table-column
-                v-for="(field, i) in tableFields"
-                :label="getFieldTitle(field)"
-                :field="field.key || field"
-                :sortable="field.sortable"
-                :key="`column_${i}`"
+    <div class="columns">
+      <div class="column">
+        <b-table
+          :data="items"
+          :loading="loading"
+          :paginated="allowPagination"
+          pagination-position="top"
+          :hoverable="hover"
+          :current-page="currentPage"
+          :total="totalPages * pageSize"
+          :per-page="pageSize"
+          @page-change="$emit('pageChanged', $event)"
+          backend-sorting
+          :default-sort-direction="sortDirection"
+          :default-sort="[sortField, sortDirection]"
+          @sort="onSort"
+          :row-class="(row, index) => row.deleting && 'is-deleting'"
         >
-          <slot
-                  :item="props.row"
-                  :name="`${field.key || field}`"
-          >{{ getRecordField(props.row, field) }}
-          </slot>
-        </b-table-column>
+          <template slot="empty">
+            <section class="section">
+              <div class="content has-text-grey has-text-centered">
+                <icon-renderer :icon="emptyIcon ? emptyIcon : 'frown'" size="4x"/>
+                <p v-if="emptyMessage">{{ emptyMessage | translate }}</p>
+              </div>
+            </section>
+          </template>
 
-        <b-table-column>
-          <div class="buttons is-right">
-            <button-renderer
-                    v-for="(a,j) in actions"
-                    :key="`action_${j}`"
-                    v-bind="a.props"
-                    :disabled="props.row.deleting"
-                    @click="$emit(`${a.action}`, props.row[idField])"
+          <template v-slot:default="props">
+            <b-table-column
+              v-for="(field, i) in tableFields"
+              :label="getFieldTitle(field)"
+              :field="field.key || field"
+              :sortable="field.sortable"
+              :key="`column_${i}`"
             >
-              <template v-if="a.text">{{ a.text | translate }}</template>
-            </button-renderer>
-          </div>
-        </b-table-column>
-      </template>
-    </b-table>
+              <slot
+                :item="props.row"
+                :name="`${field.key || field}`"
+              >{{ getRecordField(props.row, field) }}
+              </slot>
+            </b-table-column>
 
+            <b-table-column>
+              <div class="buttons is-right">
+                <button-renderer
+                  v-for="(a,j) in actions"
+                  :key="`action_${j}`"
+                  v-bind="a.props"
+                  :disabled="props.row.deleting"
+                  @click="$emit(`${a.action}`, props.row[idField])"
+                >
+                  <template v-if="a.text">{{ a.text | translate }}</template>
+                </button-renderer>
+              </div>
+            </b-table-column>
+          </template>
+        </b-table>
+      </div>
+
+    </div>
   </div>
 </template>
 
