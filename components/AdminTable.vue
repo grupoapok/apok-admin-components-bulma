@@ -1,17 +1,17 @@
 <template>
   <div>
     <div class="columns">
-      <div class="columns">
-        <b-field class="buttons is-small">
+      <div class="column is-narrow">
+        <b-field class="buttons is-small column">
           <slot name="create_button">
-            <button-renderer size="is-small" v-bind="createButtonProps" v-if="canCreate">
+            <button-renderer v-bind="createButtonProps" v-if="canCreate">
               {{ createButtonText | translate }}
             </button-renderer>
           </slot>
-          <button-renderer size="is-small" type="is-info" v-if="filtersFields.length" @click="filtersActive = true">
+          <button-renderer type="is-info" v-if="filtersFields.length" @click="filtersActive = true">
             <icon-renderer icon="filter"/>
           </button-renderer>
-          <button-renderer size="is-small" v-if="canReload" @click="$emit('refresh')">
+          <button-renderer v-if="canReload" @click="$emit('refresh')">
             <icon-renderer icon="redo"/>
           </button-renderer>
         </b-field>
@@ -25,6 +25,7 @@
         />
       </div>
     </div>
+
 
 
     <!--<transition name="fade">
@@ -42,12 +43,9 @@
     </transition>-->
 
     <b-table
-            class="column"
             :data="items"
-            :columns="columns"
             :loading="loading"
             :paginated="allowPagination"
-            pagination-size="is-small"
             pagination-position="top"
             :hoverable="hover"
             :current-page="currentPage"
@@ -69,7 +67,7 @@
         </section>
       </template>
 
-      <!--<template v-slot:default="props">
+      <template v-slot:default="props">
         <b-table-column
                 v-for="(field, i) in tableFields"
                 :label="getFieldTitle(field)"
@@ -97,7 +95,7 @@
             </button-renderer>
           </div>
         </b-table-column>
-      </template>-->
+      </template>
     </b-table>
 
   </div>
@@ -106,11 +104,9 @@
 <script>
 
   import upperFirst from "lodash.upperfirst";
-  import IconButton from "./IconButton";
 
   export default {
     name: "AdminTable",
-    components: { IconButton },
     data() {
       return {
         filtersActive: false,
@@ -120,19 +116,11 @@
     props: {
       items: {
         type: Array,
-        default: [],
-      },
-      columns:{
-        type: Array,
         default(){
-          return [
-            {field: 'id', label: 'ID', centered: true, },
-            {field: 'first_name', label: 'First name', centered: true,},
-            {field: 'last_name', label: 'Last name', centered: true,},
-            {field: 'age', label: 'Age', centered: true,},
-          ]
-        }
+          return []
+        },
       },
+
       idField: {
         type: String,
         default: "id"

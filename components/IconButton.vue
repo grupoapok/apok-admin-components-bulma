@@ -24,12 +24,10 @@
 </template>
 
 <script>
-  import Icon from './Icon';
 
   export default {
     name: 'IconButton',
     inheritAttrs: false,
-    components: { Icon },
     props: {
       iconOnly: {
         type: Boolean,

@@ -8,7 +8,7 @@
       v-bind="navbarProps"
       :user="user"
       @toggle-sidebar="$emit('toggle-sidebar')"
-      @logout="$emit('logout')"
+      @logout="confirmLogout()"
     />
     <main class="columns is-gapless">
       <menu-renderer :items="menu" :expanded="sidebarExpanded"/>
@@ -17,7 +17,7 @@
       </div>
     </main>
 
-    <layout-footer-renderer v-bind="footerProps" class="footer">
+    <layout-footer-renderer v-bind="footerProps">
       <slot name="footer">This is the Footer</slot>
     </layout-footer-renderer>
   </div>
@@ -60,7 +60,7 @@
           type: 'is-danger',
           confirmText: this.$t('actions.ok'),
           cancelText: this.$t('actions.cancel'),
-          onConfirm: () => this.logout()
+          onConfirm: () => this.$emit('logout-confirmed')
         });
       }
     },
@@ -80,5 +80,8 @@
         border-right: 1px solid $grey-lighter;
       }
     }
+  }
+  .dashboard-container {
+    padding: 24px;
   }
 </style>

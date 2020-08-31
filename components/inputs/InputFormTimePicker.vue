@@ -24,7 +24,7 @@
       </b-button>
 
       <!-- Hours input-->
-      <div class="contol columns is-vcentered is-multiline" v-if="showHours">
+      <div class="control columns is-vcentered is-multiline" v-if="showHours">
         <span class="column">{{ hoursLabel | translate }}</span>
         <b-field class="column">
           <p class="control">
@@ -42,7 +42,7 @@
       </div>
 
       <!-- Minutes input-->
-      <div class="contol columns is-vcentered is-multiline" v-if="showMinutes">
+      <div class="control columns is-vcentered is-multiline" v-if="showMinutes">
         <span class="column">{{ minutesLabel | translate }}</span>
         <b-field class="column">
           <p class="control">
@@ -57,10 +57,11 @@
             </b-button>
           </p>
         </b-field>
+
       </div>
 
       <!-- Seconds input-->
-      <div class="contol columns is-vcentered is-multiline" v-if="showSeconds">
+      <div class="control columns is-vcentered is-multiline" v-if="showSeconds">
         <span class="column">{{ secondsLabel | translate }}</span>
         <b-field class="column">
           <p class="control">
@@ -81,7 +82,7 @@
 </template>
 
 <script>
-  import moment from 'moment';
+  import { format } from 'date-fns';
 
   export default {
     name: "InputFormTimePicker",
@@ -119,7 +120,7 @@
       },
       buttonsVariant: {
         type: String,
-        default: 'is-primary'
+        default: 'is-info'
       },
       hoursInterval: {
         type: Number,
@@ -156,11 +157,11 @@
         return this.format.indexOf("m") !== -1
       },
       time() {
-        const time = new moment();
-        time.hours(this.model.hours);
-        time.minutes(this.model.minutes);
-        time.seconds(this.model.seconds);
-        return time.format(this.format)
+        const time = new Date();
+        time.setHours(this.model.hours);
+        time.setMinutes(this.model.minutes);
+        time.setSeconds(this.model.seconds);
+        return format(time, this.format)
       }
     },
     watch: {
@@ -180,17 +181,16 @@
     },
     methods: {
       openDialog() {
-        console.log("ASDASD");
         if (!this.readonly) {
           this.showDialog = true
         }
       },
       updateModel(val) {
         if (val) {
-          const time = new moment(val, this.format)
-          this.model.hours = time.hours()
-          this.model.minutes = time.minutes()
-          this.model.seconds = time.seconds()
+          const time = new Date(val);
+          this.model.hours = time.getHours();
+          this.model.minutes = time.getMinutes();
+          this.model.seconds = time.getSeconds();
         }
       },
       increaseHours() {

@@ -5,7 +5,7 @@
            :type="!!error ? 'is-danger' : ''">
     <b-field :type="!!error ? 'is-danger' : ''">
 
-      <p class="control" v-for="addon in prepend">
+      <p class="control" v-for="(addon, i) in prepend" :key="i">
         <span class="button is-static">
           <icon-renderer v-bind="addon" v-if="addon.icon"/>
           <template v-else>{{ addon }}</template>
@@ -25,7 +25,7 @@
 
       </template>-->
 
-      <p class="control" v-for="addon in append">
+      <p class="control" v-for="(addon, i) in append" :key="i">
         <span class="button is-static">
           <icon-renderer v-bind="addon" v-if="addon.icon"/>
           <template v-else>{{ addon }}</template>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="(o,i) in processedOptions" class="field">
+    <div v-for="(o,i) in processedOptions" class="field" :key="i">
       <b-radio
         :disabled="readonly"
         :key="`radio_${i}`"
