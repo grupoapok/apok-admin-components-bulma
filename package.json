@@ -1,6 +1,6 @@
 {
   "name": "@apok/admin-components-bulma",
-  "version": "1.0.1-rc.16",
+  "version": "1.0.1-rc.17",
   "description": "Bulma components for @apok/admin",
   "scripts": {
     "postinstall": "node install.js"
