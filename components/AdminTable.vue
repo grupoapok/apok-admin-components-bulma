@@ -103,7 +103,7 @@
 
 <script>
 
-  import upperFirst from "lodash.upperfirst";
+  import startCase from "lodash.startcase";
 
   export default {
     name: "AdminTable",
@@ -264,7 +264,7 @@
         if (typeof field === "object") {
           title = field.label || field.key;
         }
-        return upperFirst(this.$t(title));
+        return startCase(this.$t(title));
       },
       getRecordField(record, field) {
         let fieldKey = field;
